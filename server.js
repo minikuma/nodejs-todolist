@@ -5,6 +5,12 @@
  */
 
 const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const TodoTask = require('./model/TodoTask');
+
+dotenv.config();
+
 const app = express();
 
 app.use(express.static(__dirname + '/public'));
@@ -19,13 +25,26 @@ app.get('/', (req, res) => {
 
 app.use(express.urlencoded({extended: true}));
 
-
 // POST Method
-app.post('/', (req, res) => {
-   console.log(req.body);
+app.post('/', async (req, res) => {
+   const todoTask = new TodoTask({
+       content: req.body.content
+   });
+
+   try {
+       await todoTask.save();
+       res.redirect('/');
+   } catch (err) {
+       res.redirect('/');
+   }
 });
 
-
-app.listen(4000, () => {
-    console.log("Node js Express Sever Stated")
+// mongoose connection
+mongoose.connect(process.env.DB_CONNECT, {
+        useFindAndModify: true,
+   }, () => {
+    console.log('Connected MongoDB!');
+    app.listen(4000, () => {
+        console.log("Node js Express Sever Stated")
+    });
 });
