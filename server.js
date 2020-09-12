@@ -19,11 +19,21 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
+/*
 app.get('/', (req, res) => {
     res.render('todo.ejs')
-})
+})*/
 
 app.use(express.urlencoded({extended: true}));
+
+
+// GET Method
+app.get('/', (req, res) => {
+    TodoTask.find({}, (err, tasks) => {
+        console.log(`tasks: ${tasks}`);
+       res.render('todo.ejs', { todoTasks: tasks });
+    });
+});
 
 // POST Method
 app.post('/', async (req, res) => {
@@ -38,6 +48,7 @@ app.post('/', async (req, res) => {
        res.redirect('/');
    }
 });
+
 
 // mongoose connection
 mongoose.connect(process.env.DB_CONNECT, {
