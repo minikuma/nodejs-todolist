@@ -30,7 +30,6 @@ app.use(express.urlencoded({extended: true}));
 // GET Method
 app.get('/', (req, res) => {
     TodoTask.find({}, (err, tasks) => {
-        console.log(`tasks: ${tasks}`);
        res.render('todo.ejs', { todoTasks: tasks });
     });
 });
@@ -47,6 +46,23 @@ app.post('/', async (req, res) => {
    } catch (err) {
        res.redirect('/');
    }
+});
+
+// UPDATE Method
+app
+    .route('/edit/:id')
+    .get((req, res) => {
+         const id = req.params.id;
+         TodoTask.find({}, (err, tasks) => {
+            res.render('todoEdit.ejs', { todoTasks: tasks, idTask: id });
+        });
+    })
+    .post((req, res) => {
+    const id = req.params.id;
+    TodoTask.findByIdAndUpdate(id, { content: req.body.content }, err => {
+        if(err) return res.status(500).json({ error: 'database failure' });
+        res.redirect('/');
+    });
 });
 
 
