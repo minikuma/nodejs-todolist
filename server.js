@@ -8,6 +8,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const TodoTask = require('./model/TodoTask');
+const db = require('./db/db');
 
 dotenv.config();
 
@@ -19,13 +20,7 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
-/*
-app.get('/', (req, res) => {
-    res.render('todo.ejs')
-})*/
-
 app.use(express.urlencoded({extended: true}));
-
 
 // GET Method
 app.get('/', (req, res) => {
@@ -75,17 +70,10 @@ app
     });
 });
 
-// mongoose connection
-mongoose.connect(process.env.DB_CONNECT, {
-    useFindAndModify: false,
-}, function (err) {
-    if (err) {
-        console.error("mongodb connection error!:::", err);
-    } else {
-        console.log('Connected MongoDB!');
-        app.listen(4000, () => {
-            console.log("Node js Express Sever Stated")
-        });
-    }
+// mongoose connection - refactoring-1 (별도 db.js 파일 생성)
+db();
+
+app.listen(4000, () => {
+    console.log("Node js Express Sever Stated")
 });
 
