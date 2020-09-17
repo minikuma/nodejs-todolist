@@ -5,11 +5,10 @@
  */
 
 const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const TodoTask = require('./model/TodoTask');
 const db = require('./db/db');
-
+const routes = require('./routes/todoRoute')
 dotenv.config();
 
 const app = express();
@@ -22,12 +21,15 @@ app.set('views', __dirname + '/views');
 
 app.use(express.urlencoded({extended: true}));
 
-// GET Method
-app.get('/', (req, res) => {
+// router 사용
+app.use('/', routes);
+
+// GET Method -> router 로 이동
+/*app.get('/', (req, res) => {
     TodoTask.find({}, (err, tasks) => {
         res.render('todo.ejs', {todoTasks: tasks});
     });
-});
+});*/
 
 // POST Method
 app
