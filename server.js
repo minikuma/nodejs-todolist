@@ -24,53 +24,7 @@ app.use(express.urlencoded({extended: true}));
 // router 사용
 app.use('/', routes);
 
-// GET Method -> router 로 이동
-/*app.get('/', (req, res) => {
-    TodoTask.find({}, (err, tasks) => {
-        res.render('todo.ejs', {todoTasks: tasks});
-    });
-});*/
-
-// POST Method
-app
-    .post('/', async (req, res) => {
-        const todoTask = new TodoTask({
-            content: req.body.content
-        });
-        try {
-            await todoTask.save();
-            res.redirect('/');
-        } catch (err) {
-            res.redirect('/');
-        }
-    });
-
-// UPDATE Method
-app
-    .route('/edit/:id')
-    .get((req, res) => {
-        const id = req.params.id;
-        TodoTask.find({}, (err, tasks) => {
-            res.render('todoEdit.ejs', {todoTasks: tasks, idTask: id});
-        });
-    })
-    .post((req, res) => {
-        const id = req.params.id;
-        TodoTask.findOneAndUpdate(id, {content: req.body.content}, err => {
-            if (err) return res.status(500).json({error: 'Update method Fail!'});
-            res.redirect('/');
-        });
-    });
-
-// Delete Method
-app
-    .route('/remove/:id').get((req, res) => {
-    const id = req.params.id;
-    TodoTask.findOneAndRemove(id, err => {
-        if (err) return res.status(500).json({error: 'Remove method Fail!'});
-        res.redirect('/');
-    });
-});
+// GET/DELETE/UPDATE/POST Method -> router 로 이동
 
 // mongoose connection - refactoring-1 (별도 db.js 파일 생성)
 db();
