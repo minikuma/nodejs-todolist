@@ -6,7 +6,6 @@
 
 const express = require('express');
 const dotenv = require('dotenv');
-const TodoTask = require('./model/TodoTask');
 const db = require('./db/db');
 const routes = require('./routes/todoRoute')
 dotenv.config();
